@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>プライバシーポリシー｜メモアシスタント</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <h1>プライバシーポリシー</h1>
+  <p class="lead">メモアシスタント（以下「本アプリ」）　制定 2026年10月27日</p>
+
+  <p>本アプリは、開発者である今井泰斗が自分ひとりで使うために作ったアプリです。他の人に配布・提供しておらず、利用者は開発者本人だけです。</p>
+
+  <h2>1. 扱う情報</h2>
+  <ul>
+    <li>利用者が入力した ToDo・メモの内容、期限・リマインドの日時、並び順</li>
+    <li>ログイン用のメールアドレス</li>
+    <li>利用者が Google 連携を許可した場合に限り、Google カレンダーの予定、Gmail のメール、Google ドライブのファイル情報（下記「4」）</li>
+  </ul>
+
+  <h2>2. 保存する場所</h2>
+  <ul>
+    <li>ToDo・メモは、利用者の端末と、端末間の同期のために利用者自身が管理する Supabase のデータベースに保存します。</li>
+    <li>毎晩のバックアップを、利用者自身の Google ドライブに保存します。</li>
+    <li>Google の認証情報（トークン）は利用者の端末の中にだけ保存し、外部へ送りません。</li>
+  </ul>
+
+  <h2>3. AI（アシスタント）への送信</h2>
+  <p>アシスタント機能を使ったときに限り、質問への回答に必要な範囲の情報（ToDo・メモ、今日の予定、利用者が調べるよう頼んだメールやファイルの内容）を Anthropic 社の Claude API に送ります。送信には利用者自身の API キーを使います。</p>
+
+  <h2>4. Google のユーザーデータの利用</h2>
+  <ul>
+    <li>Google カレンダー：予定を読んで回答や画面表示に使います。予定の追加は、利用者が頼んだときだけ行います。</li>
+    <li>Gmail：利用者が頼んだときにメールを検索・閲覧するだけです。送信・削除・既読化・設定変更は行いません。</li>
+    <li>Google ドライブ：ファイルの検索と、本アプリのバックアップファイルの保存に使います。</li>
+    <li>Google から受け取った情報は、上記の機能を利用者本人に提供するためだけに使い、広告への利用、第三者への販売・譲渡、人による閲覧は行いません（上記「3」のとおり、利用者がアシスタントに頼んだ場合の Claude API への送信を除きます）。</li>
+    <li>本アプリによる Google API から受け取った情報の使用および他のアプリへの転送は、<a href="https://developers.google.com/terms/api-services-user-data-policy">Google API サービスのユーザーデータに関するポリシー</a>（限定的使用の要件を含む）に従います。</li>
+  </ul>
+
+  <h2>5. 第三者への提供</h2>
+  <p>上記「2」「3」の保存・処理の委託先（Supabase、Google、Anthropic）を除き、情報を第三者に提供しません。</p>
+
+  <h2>6. 削除</h2>
+  <p>本アプリの設定画面から Google 連携を解除すると、端末内の Google の認証情報を消し、許可を取り消します。Google アカウントの「サードパーティのアクセス」からも、いつでも取り消せます。ToDo・メモはアプリ内で削除できます。</p>
+
+  <h2>7. 連絡先</h2>
+  <p>今井泰斗　GitHub <a href="https://github.com/HirotoTDL">@HirotoTDL</a></p>
+
+  <footer><a href="./">メモアシスタントのページへ</a></footer>
+</main>
+</body>
+</html>
