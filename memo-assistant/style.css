@@ -1,9 +1,9 @@
 :root {
-  --bg: #f6f7f9; --surface: #ffffff; --line: #dfe2e7; --text: #1c1f24; --muted: #5b6270; --accent: #2f7de1;
+  --bg: #f6f7f9; --surface: #ffffff; --line: #dfe2e7; --text: #1c1f24; --muted: #5b6270; --accent: #1e5bd8;
   color-scheme: light dark;
 }
 @media (prefers-color-scheme: dark) {
-  :root { --bg: #14161a; --surface: #1c1f25; --line: #2f3440; --text: #e8eaee; --muted: #9aa2b0; --accent: #6bb0f5; }
+  :root { --bg: #14161a; --surface: #1c1f25; --line: #2f3440; --text: #e8eaee; --muted: #9aa2b0; --accent: #4fa3ff; }
 }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.8 "Hiragino Sans", "Yu Gothic UI", "Meiryo", system-ui, sans-serif; }
