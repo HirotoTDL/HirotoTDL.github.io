@@ -1,0 +1,70 @@
+/* 動き（カワセミの「まっすぐ飛び込む」速さを手触りにする）。
+   イージングは2種だけ：飛び込み＝--ease-dive（速く入って止まる）、着地＝--ease-land（少し行き過ぎて戻る）。
+   動きを減らす設定の端末では、すべて止める。 */
+:root {
+  --ease-dive: cubic-bezier(.2, .9, .1, 1);
+  --ease-land: cubic-bezier(.34, 1.56, .64, 1);
+  --streak: linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 55%, transparent) 40%, color-mix(in srgb, var(--accent-2, var(--accent)) 80%, transparent) 70%, transparent);
+}
+
+/* 画面の切り替え：少し下から滑り込む */
+.view.view-enter > * { animation: ma-rise .32s var(--ease-dive) both; }
+.view.view-enter > *:nth-child(2) { animation-delay: .03s; }
+.view.view-enter > *:nth-child(3) { animation-delay: .06s; }
+.view.view-enter > *:nth-child(4) { animation-delay: .09s; }
+.view.view-enter > *:nth-child(n+5) { animation-delay: .12s; }
+@keyframes ma-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* 増えた行：上から飛び込んで着地 */
+.row.enter, .event.enter { animation: ma-drop .46s var(--ease-land) both; }
+@keyframes ma-drop {
+  0% { opacity: 0; transform: translateY(-14px) scale(.97); }
+  60% { opacity: 1; }
+  100% { opacity: 1; transform: none; }
+}
+.row.enter::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: var(--streak); background-size: 200% 100%; animation: ma-sweep .7s var(--ease-dive) .05s both; }
+.row { position: relative; }
+
+/* 完了：チェックがはじけ、青い筋が横切って、行が右へ抜けて畳まれる */
+.row.leaving { pointer-events: none; overflow: hidden; animation: ma-out .42s var(--ease-dive) .14s both; }
+.row.leaving::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: var(--streak); background-size: 200% 100%; animation: ma-sweep .45s var(--ease-dive) both; }
+.row.leaving .check { background: var(--ok); border-color: var(--ok); animation: ma-pop .3s var(--ease-land) both; }
+.row.leaving .check::before { content: "✓"; display: block; color: #fff; font-size: 11px; font-weight: 800; line-height: 14px; text-align: center; }
+.row.leaving.to-side .check { animation: none; }
+/* 筋は走り終えたら必ず消える（終わりの見た目が残ると行が青く塗られたままになる） */
+@keyframes ma-sweep { from { background-position: 100% 0; opacity: 1; } 70% { opacity: 1; } to { background-position: -100% 0; opacity: 0; } }
+@keyframes ma-pop { 0% { transform: scale(.6); } 100% { transform: scale(1); } }
+@keyframes ma-out {
+  0% { transform: none; opacity: 1; max-height: 120px; }
+  55% { transform: translateX(34px); opacity: 0; max-height: 120px; margin: 2px 0; padding-top: 7px; padding-bottom: 7px; }
+  100% { transform: translateX(34px); opacity: 0; max-height: 0; margin: 0; padding-top: 0; padding-bottom: 0; }
+}
+
+/* 元に戻す の帯：下から弾んで出る */
+.toast:not([hidden]) { animation: ma-toast .38s var(--ease-land) both; }
+@keyframes ma-toast { from { opacity: 0; transform: translateY(14px) scale(.96); } to { opacity: 1; transform: none; } }
+
+/* 押した手応え */
+.make, .check, .scopes button, .kind button, .ai-opts button, .presets button, .bar-ai, .icon { transition: transform .12s var(--ease-dive), background-color .18s, color .18s, filter .18s; }
+.make:active, .presets button:active, .bar-ai:active, .icon:active { transform: scale(.94); }
+.check:active { transform: scale(.85); }
+.scopes button.on, .kind button.on, .ai-opts button.on { animation: ma-pop .28s var(--ease-land); }
+
+/* ✦（AI）は光が走る */
+.bar-ai, .icon.ai { position: relative; overflow: hidden; }
+.bar-ai::after, .icon.ai::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, .55) 50%, transparent 65%); transform: translateX(-120%); }
+.bar-ai:hover::after, .icon.ai:hover::after { animation: ma-shine .7s var(--ease-dive); }
+@keyframes ma-shine { to { transform: translateX(120%); } }
+
+/* 考え中：3つの点が水面を跳ねる */
+.msg.thinking::after { content: ""; display: inline-block; width: 26px; height: 8px; margin-left: 6px; vertical-align: middle;
+  background: radial-gradient(circle, var(--accent) 3px, transparent 3.5px) 0 50% / 9px 8px repeat-x; animation: ma-hop 1s var(--ease-dive) infinite; }
+@keyframes ma-hop { 0%, 100% { clip-path: inset(0 66% 0 0); } 33% { clip-path: inset(0 33% 0 0); } 66% { clip-path: inset(0 0 0 0); } }
+.msg.ai:not(.thinking).enter { animation: ma-rise .3s var(--ease-dive) both; }
+
+/* バーの件数が変わったら跳ねる */
+.bar-count.bump { animation: ma-pop .4s var(--ease-land); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

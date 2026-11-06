@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="メモ">
+  <meta name="theme-color" content="#f3f6fb">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="icon" href="icon.png">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.anthropic.com https://*.googleapis.com https://oauth2.googleapis.com; worker-src 'self'; manifest-src 'self'">
+  <title>メモアシスタント</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="motion.css">
+</head>
+<body>
+  <!-- 畳んだとき：画面端の細いバー -->
+  <div id="bar" class="bar" hidden>
+    <div class="bar-grip" title="上下にドラッグで移動"><i></i></div>
+    <!-- 件数を押すとメモ一覧 -->
+    <button class="bar-open" id="barOpen" title="メモ一覧を開く（Ctrl+Alt+M）">
+      <span class="bar-count work" id="barWork">0</span>
+      <span class="bar-label">仕事</span>
+      <span class="bar-count private" id="barPrivate">0</span>
+      <span class="bar-label">私</span>
+      <span class="bar-alert" id="barAlert" hidden>!</span>
+    </button>
+    <!-- ぴよからの提案があるときだけ出る。押すと提案の一覧 -->
+    <button class="bar-idea" id="barIdea" title="ぴよからの提案を見る" hidden>💡<span id="barIdeaN"></span></button>
+    <!-- 一番下：ぴよに話しかける（Ctrl+Alt+A） -->
+    <button class="bar-ai" id="barAi" title="ぴよに話しかける（Ctrl+Alt+A）"><img src="piyo/face.png" alt="ぴよ" draggable="false"></button>
+  </div>
+
+  <!-- 最初の画面（初めて開いたとき） -->
+  <div class="idea-pop" id="onboard" hidden>
+    <div class="idea-pop-box onboard" role="dialog" aria-label="はじめての設定">
+      <div class="idea-pop-head"><img src="piyo/happy.png" alt="" draggable="false"><b>はじめまして、ぴよだよ！</b></div>
+      <label class="field"><span>なんて呼べばいい？</span><input id="obName" placeholder="例：花子"></label>
+      <label class="field"><span>ログインするメールアドレス（PC とスマホで同じもの）</span><input id="obEmail" type="email" placeholder="you@example.com"></label>
+      <label class="field"><span>パスワード（管理者からもらったもの）</span><input id="obPass" type="password" autocomplete="current-password"></label>
+      <div class="btns-row"><button class="btn" id="obSend">ログイン</button></div>
+      <p class="note ob-pc-only">パスワードを入れずに押すと、ログイン用のリンクをメールで送ります（PC 版だけ）。</p>
+      <label class="field"><span>Claude の API キー（もらったものを貼る・この端末にだけ保存）</span><input id="obKey" placeholder="sk-ant-…" autocomplete="off"></label>
+      <p class="note" id="obMsg">あとから設定（⚙）でも変えられます。Google との連携も設定から。</p>
+      <div class="btns-row"><button class="btn primary" id="obStart">はじめる</button></div>
+    </div>
+  </div>
+
+  <!-- 起動時：まだ見ていない提案のお知らせ -->
+  <div class="idea-pop" id="ideaPop" hidden>
+    <div class="idea-pop-box" role="dialog" aria-label="ぴよからの新しい提案">
+      <div class="idea-pop-head"><img src="piyo/idea.png" alt="" draggable="false"><b id="ideaPopTitle">ぴよから新しい提案があるよ</b></div>
+      <ul id="ideaPopList"></ul>
+      <div class="btns-row"><button class="btn primary" id="ideaPopOpen">一覧で見る</button><button class="btn" id="ideaPopLater">あとで</button></div>
+    </div>
+  </div>
+
+  <!-- 広げたとき -->
+  <div id="panel" class="panel">
+    <header class="head">
+      <div class="head-title">
+        <img src="logo.png" alt="" class="head-logo" draggable="false"><strong>メモ</strong>
+        <span class="ctx" id="ctx"></span>
+      </div>
+      <div class="head-actions">
+        <button class="icon idea-btn" data-go="ideas" title="ぴよからの提案">💡<span class="tab-badge" id="ideaBadge" hidden></span></button>
+        <button class="icon ai" data-go="assistant" title="ぴよに聞く">✦</button>
+        <button class="icon" data-go="search" title="探す（いつか・完了も含む）">⌕</button>
+        <button class="icon" data-go="settings" title="設定">⚙</button>
+        <button class="icon" id="collapse" title="畳む">›</button>
+      </div>
+    </header>
+
+    <!-- 最初はアシスタント。メモ一覧はこれまでどおり隣のタブに -->
+    <nav class="tabs" id="tabs">
+      <button data-go="assistant"><img src="piyo/face.png" alt="" draggable="false">ぴよ</button>
+      <button data-go="home">☰ メモ一覧</button>
+      <button data-go="work" title="Claude Code の作業をまとめて見る・指示する">🛠 司令室<span class="tab-badge" id="cmdBadge" hidden></span></button>
+    </nav>
+    <nav class="scopes" id="scopes">
+      <button data-scope="work">仕事</button>
+      <button data-scope="private">私</button>
+      <button data-scope="all">全部</button>
+    </nav>
+
+    <div id="reminders"></div>
+    <main id="view" class="view"></main>
+
+    <div class="toast" id="toast" hidden><span id="toastText"></span><button type="button" id="toastUndo">元に戻す</button></div>
+    <form class="quick" id="quick" autocomplete="off">
+      <div class="quick-opts ai-opts" id="aiOpts" hidden title="AI に頼む行き先（選ばなければ おまかせ）"></div>
+      <div class="quick-opts" id="quickOpts">
+        <div class="kind" id="kind">
+          <button type="button" data-kind="todo" class="on">ToDo</button>
+          <button type="button" data-kind="memo">メモ</button>
+        </div>
+        <div class="kind scope-sel" id="scopeSel" title="勤務中は「仕事」、それ以外は「私」が初期値">
+          <button type="button" data-addscope="work">仕事</button>
+          <button type="button" data-addscope="private">私</button>
+        </div>
+      </div>
+      <div class="attach" id="attach" hidden></div>
+      <div class="quick-row">
+        <textarea id="quickText" rows="1" placeholder="明日10時に〇〇さんに電話 #仕事" aria-label="追加"></textarea>
+        <button type="submit" class="make" id="make">作成</button>
+      </div>
+      <div class="hint" id="hint"></div>
+    </form>
+
+    <footer class="foot">
+      <button data-go="done">完了 <span id="cntDone">0</span></button>
+      <button data-go="someday">いつか <span id="cntSomeday">0</span></button>
+      <button data-go="trash">ゴミ箱 <span id="cntTrash">0</span></button>
+      <span class="sync" id="sync" title=""></span>
+    </footer>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
