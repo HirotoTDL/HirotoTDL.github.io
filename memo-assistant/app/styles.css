@@ -470,3 +470,5 @@ body.web #hint { display: none !important; }
 .pt-table td.pt-none { color: var(--muted); }
 .pt-table .pt-target { background: color-mix(in srgb, #1E5BD8 7%, transparent); }
 .pt-legend, .pt-at { font-size: 11px; }
+.pt-link { color: inherit; text-decoration: none; cursor: pointer; }
+.pt-link:hover { color: #1E5BD8; text-decoration: underline; }
