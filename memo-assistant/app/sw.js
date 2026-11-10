@@ -1,6 +1,6 @@
 // ブラウザ版の Service Worker：画面の部品（HTML・JS・CSS・絵）を手元に置く。
 // 開くたびにネットから新しいものを取りにいき、つながらないときだけ手元の分を使う（古い画面が残り続けないように）
-const CACHE = 'ma-web-1.0.9-mw8up03e';
+const CACHE = 'ma-web-1.0.9-mwa4qm4q';
 const SHELL = ['./', 'index.html', 'app.js', 'styles.css', 'motion.css', 'manifest.webmanifest', 'icon.png', 'logo.png'];
 
 self.addEventListener('install', (e) => {
