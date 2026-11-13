@@ -50,6 +50,31 @@
   </div>
 
   <!-- 顧問先ポータル：担当先の資料の状況（ToDo の上の1行を押すと出る） -->
+  <!-- 予定の編集（今日の予定を押すと開く。保存すると Google カレンダーが書き換わる） -->
+  <div class="idea-pop" id="eventPop" hidden>
+    <form class="idea-pop-box event-box" role="dialog" aria-label="予定の編集" id="eventForm">
+      <div class="idea-pop-head"><img src="piyo/happy.png" alt="" draggable="false"><b>予定を編集</b><span class="ev-cal" id="eventCal"></span></div>
+      <label class="field"><span>タイトル</span><input name="title" required></label>
+      <label class="ev-allday"><input type="checkbox" name="allDay"> 終日</label>
+      <div class="ev-when">
+        <label class="field"><span>日付</span><input type="date" name="date" required></label>
+        <label class="field ev-t"><span>開始</span><input type="time" name="startTime"></label>
+        <label class="field ev-t"><span>終了</span><input type="time" name="endTime"></label>
+        <label class="field ev-d"><span>最後の日</span><input type="date" name="endDate"></label>
+      </div>
+      <label class="field"><span>場所</span><input name="location"></label>
+      <label class="field"><span>メモ</span><textarea name="description" rows="3"></textarea></label>
+      <p class="note" id="eventNote"></p>
+      <div class="btns-row">
+        <button type="button" class="btn" id="eventOpen" title="Google カレンダーで開く">カレンダーで開く ↗</button>
+        <button type="button" class="btn danger" id="eventDelete">削除</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn" id="eventCancel">やめる</button>
+        <button type="submit" class="btn primary" id="eventSave">保存</button>
+      </div>
+    </form>
+  </div>
+
   <div class="idea-pop" id="portalPop" hidden>
     <div class="idea-pop-box portal-box" role="dialog" aria-label="担当先の資料の状況">
       <div class="idea-pop-head"><img src="piyo/happy.png" alt="" draggable="false"><b id="portalPopTitle">担当先の資料</b></div>

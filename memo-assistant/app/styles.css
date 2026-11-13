@@ -141,6 +141,8 @@ input, textarea, select { font: inherit; color: var(--text); }
 .idea-btns button { padding: 4px 12px; border-radius: 999px; background: var(--surface-2); color: var(--text); font-size: 12px; font-weight: 600; }
 .idea-btns button.primary { background: var(--brand); color: #fff; }
 .idea-btns button:hover { filter: brightness(1.06); }
+.idea-btns .speak-credit { margin-left: auto; align-self: center; font-size: 10px; color: var(--muted, #888); }
+.idea-btns .speak-credit + button.speak-btn { margin-left: 0; }
 .idea-btns button.speak-btn { margin-left: auto; }
 .idea-btns button.speak-btn.on { background: var(--brand); color: #fff; }
 
@@ -481,3 +483,16 @@ body.web #hint { display: none !important; }
 .wait-row { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; padding: 6px 10px; margin: 2px 0; border-radius: 10px; background: var(--card, rgba(127,127,127,.06)); font-size: 13px; }
 .wait-row .wait-when { font-size: 11px; color: var(--muted); }
 .wait-row .wait-rule { font-size: 11px; color: var(--muted); flex-basis: 100%; }
+
+/* 予定の編集の小窓 */
+.event-box { width: min(380px, 100%); max-height: calc(100vh - 32px); overflow: auto; }
+.event-box .idea-pop-head { display: flex; align-items: center; gap: 6px; }
+.event-box .idea-pop-head .ev-cal { margin-left: auto; font-size: 11px; padding: 1px 6px; }
+.event-box .field { margin: 0 0 8px; }
+.event-box .field textarea { min-height: 60px; }
+.ev-allday { display: flex; align-items: center; gap: 6px; font-size: 13px; margin: 0 0 8px; }
+.ev-when { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 6px; }
+.ev-when .field[hidden] { display: none; }
+.event-box .btns-row { margin: 10px 0 0; align-items: center; }
+.event-box .spacer { flex: 1; }
+.event[data-ev] { cursor: pointer; }
